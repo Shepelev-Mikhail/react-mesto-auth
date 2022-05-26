@@ -9,6 +9,10 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
+import { Switch, Route, Link, Redirect } from 'react-router-dom';
+import Login from './Login';
+import Register from './Register';
+
 
 function App() {
   const [cards, updateCards] = useState([]);
@@ -17,6 +21,7 @@ function App() {
   const [isAddPlacePopupOpen, updateIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, updateIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, updateSelectedCard] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -120,15 +125,26 @@ function App() {
       <div className="page">
         <div className="page__content">
           <Header />
-          <Main
-            onCardClick={handleCardClick}
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            cards={cards}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
-          />
+          <Switch>
+            <Route exact path="/">
+              <Main
+                onCardClick={handleCardClick}
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                onEditAvatar={handleEditAvatarClick}
+                cards={cards}
+                onCardLike={handleCardLike}
+                onCardDelete={handleCardDelete}
+              />
+            </Route>
+            <Route path="/sign-up">
+              <Register />
+            </Route>
+            <Route path="/sign-in">
+              <Login />
+            </Route>
+          </Switch>
+
         </div>
 
         <div className="page__sticky-footer">
