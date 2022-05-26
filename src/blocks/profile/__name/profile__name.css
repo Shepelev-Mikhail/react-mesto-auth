@@ -1,0 +1,23 @@
+.profile__name {
+  width: 100%;
+  padding: 0;
+  box-sizing: border-box;
+  padding-left: 28px;
+  margin-top: 26px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-content: flex-start;
+  align-items: baseline;
+}
+
+@media screen and (min-width: 768px) {
+  .profile__name {
+    max-width: calc(100% - 120px);
+    margin-top: 0;
+    padding-left: 30px;
+    padding-right: 30px;
+    justify-content: flex-start;
+  }
+}

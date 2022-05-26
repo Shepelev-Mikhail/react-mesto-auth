@@ -1,0 +1,14 @@
+.popup__field {
+  position: relative;
+  margin-top: 32px;
+}
+
+.popup__field:first-child {
+  margin-top: 70px;
+}
+
+@media screen and (min-width: 768px) {
+  .popup__field:first-child {
+    margin-top: 43px;
+  }
+}

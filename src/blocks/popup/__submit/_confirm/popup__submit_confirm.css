@@ -1,0 +1,5 @@
+@media screen and (min-width: 768px) {
+  .popup__submit_confirm {
+    margin-top: 34px;
+  }
+}
