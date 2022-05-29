@@ -5,11 +5,6 @@ function AddPlacePopup(props) {
   const [place, changePlace] = useState('');
   const [link, changeLink] = useState('');
 
-  useEffect(() => {
-    changePlace('');
-    changeLink('');
-  }, [props.isOpen]);
-
   function handleChangePlace(e) {
     changePlace(e.target.value);
   };
@@ -31,7 +26,6 @@ function AddPlacePopup(props) {
       name="place"
       title="Новое место"
       buttonText="Создать"
-      isOpen={props.isOpen}
       onClose={props.onClose}
       onSubmit={handleSubmit}
     >

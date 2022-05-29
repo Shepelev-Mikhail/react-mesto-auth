@@ -10,7 +10,7 @@ function EditProfilePopup(props) {
   useEffect(() => {
     changeName(currentUser?.name);
     changeDescription(currentUser?.about);
-  }, [currentUser, props.isOpen]);
+  }, [currentUser]);
 
   function handleChangeName(e) {
     changeName(e.target.value);
@@ -33,7 +33,6 @@ function EditProfilePopup(props) {
       name="profile"
       title="Редактировать профиль"
       buttonText="Сохранить"
-      isOpen={props.isOpen}
       onClose={props.onClose}
       onSubmit={handleSubmit}
     >

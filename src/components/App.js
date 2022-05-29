@@ -9,10 +9,13 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
-import { Switch, Route, Link, Redirect } from 'react-router-dom';
+import { Switch, Route, Link, Redirect, useLocation, useHistory } from 'react-router-dom';
 import Login from './Login';
 import Register from './Register';
-
+import ProtectedRoute from './ProtectedRoute';
+import * as MestoAuth from '../utils/MestoAuth.js';
+import InfoTooltip from './InfoTooltip';
+import success from '../images/Success.svg';
 
 function App() {
   const [cards, updateCards] = useState([]);
@@ -21,7 +24,9 @@ function App() {
   const [isAddPlacePopupOpen, updateIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, updateIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, updateSelectedCard] = useState(null);
+  const [dataInfoTooltip, updateDataInfoTooltip] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const history = useHistory();
 
   useEffect(() => {
     return () => {
@@ -54,28 +59,12 @@ function App() {
     updateSelectedCard(card);
   };
 
-  //клик на крестик
-  const closeAllPopups = () => {
-    if (isEditAvatarPopupOpen) {
-      updateIsEditAvatarPopupOpen(false);
-    }
-    if (isEditProfilePopupOpen) {
-      updateIsEditProfilePopupOpen(false);
-    }
-    if (isAddPlacePopupOpen) {
-      updateIsAddPlacePopupOpen(false);
-    }
-    if (selectedCard) {
-      updateSelectedCard(null);
-    }
-  };
-
   // сабмит редактирования профиля
   const handleUpdateUser = ({ name, about }) => {
     api.editProfile(name, about)
       .then((res) => {
         updateCurrentUser(res);
-        closeAllPopups();
+        updateIsEditProfilePopupOpen(false);
       })
       .catch(console.log);
   };
@@ -85,7 +74,7 @@ function App() {
     api.updateAvatar(avatar)
       .then((res) => {
         updateCurrentUser(res);
-        closeAllPopups();
+        updateIsEditAvatarPopupOpen(false);
       })
       .catch(console.log);
   };
@@ -115,10 +104,25 @@ function App() {
     api.addCard(name, link)
       .then((res) => {
         updateCards([res, ...cards]);
-        closeAllPopups();
+        updateIsAddPlacePopupOpen(false);
       })
       .catch(console.log);
   };
+
+  //const location = useLocation();
+
+  const handleRegister = ({email, password}) => {
+    return MestoAuth.register(email, password).then(() => {
+      // history.push('/sign-in');
+      updateDataInfoTooltip({
+        title: 'Вы успешно зарегистрировались!',
+        img: success
+      })
+      history.push('/sign-in')
+    })
+  }
+
+  
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -126,7 +130,7 @@ function App() {
         <div className="page__content">
           <Header />
           <Switch>
-            <Route exact path="/">
+            <ProtectedRoute exact path="/" loggedIn={loggedIn}>
               <Main
                 onCardClick={handleCardClick}
                 onEditProfile={handleEditProfileClick}
@@ -136,12 +140,18 @@ function App() {
                 onCardLike={handleCardLike}
                 onCardDelete={handleCardDelete}
               />
-            </Route>
+            </ProtectedRoute>
+
             <Route path="/sign-up">
-              <Register />
+              <Register handleRegister={handleRegister} updateDataInfoTooltip={updateDataInfoTooltip} />
             </Route>
+
             <Route path="/sign-in">
               <Login />
+            </Route>
+
+            <Route>
+              {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
             </Route>
           </Switch>
 
@@ -151,34 +161,38 @@ function App() {
           <Footer />
         </div>
 
-        <EditProfilePopup // попап редактирования 
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
+        {isEditProfilePopupOpen && <EditProfilePopup // попап редактирования 
+          onClose={() => updateIsEditProfilePopupOpen(false)}
           onUpdateUser={handleUpdateUser}
-        />
+        />}
 
-        <AddPlacePopup // попап аватара
-          isOpen={isAddPlacePopupOpen}
-          onClose={closeAllPopups}
+        {isAddPlacePopupOpen && <AddPlacePopup // попап аватара
+          onClose={() => updateIsAddPlacePopupOpen(false)}
           onAddPlace={handleAddPlaceSubmit}
-        />
+        />}
 
-        <EditAvatarPopup // попап создания карточки
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
+        {isEditAvatarPopupOpen && <EditAvatarPopup // попап создания карточки
+          onClose={() => updateIsEditAvatarPopupOpen(false)}
           onUpdateAvatar={handleUpdateAvatar}
-        />
+        />}
 
-        <PopupWithForm //попап подтверждения удаления 
+        {selectedCard && <ImagePopup //попап просмотра
+          card={selectedCard}
+          onClose={() => updateSelectedCard(null)}
+        />}
+
+        {dataInfoTooltip && <InfoTooltip 
+          title={dataInfoTooltip.title}
+          img={dataInfoTooltip.img}
+          onClose={() => updateDataInfoTooltip(null)}
+        />}
+
+        {/* {<PopupWithForm //попап подтверждения удаления 
           name="confirm"
           title="Вы уверены?"
           buttonText="Да"
-        />
+        />} */}
 
-        <ImagePopup //попап просмотра
-          card={selectedCard}
-          onClose={closeAllPopups}
-        />
       </div>
     </CurrentUserContext.Provider>
 
