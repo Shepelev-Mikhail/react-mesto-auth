@@ -13,7 +13,7 @@ function Header(props) {
     } else if (location?.pathname === '/sign-in') {
       setBtn({ link: '/sign-up', name: 'Регистрация' });
     }
-  }
+  };
 
   useEffect(() => {
     checkLocation();

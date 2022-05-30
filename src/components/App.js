@@ -113,6 +113,7 @@ function App() {
       .catch(console.log);
   };
 
+  //регистрация
   const handleRegister = ({ email, password }) => {
     return MestoAuth.register(email, password).then(() => {
       updateDataInfoTooltip({
@@ -121,8 +122,9 @@ function App() {
       })
       history.push('/sign-in')
     })
-  }
+  };
 
+  //авторизация
   const handleLogin = ({ email, password }) => {
     return MestoAuth.authorize(email, password)
       .then((data) => {
@@ -133,8 +135,9 @@ function App() {
           setEmail(email);
         }
       })
-  }
+  };
 
+  //проверка авторизации
   const tokenCheck = () => {
     if (localStorage.getItem('token')) {
       let token = localStorage.getItem('token');
@@ -144,22 +147,28 @@ function App() {
           history.push('/');
           setEmail(res.data.email);
         }
-      });
+      })
+      .catch(console.log);
     }
-  }
+  };
 
+  //выход
   const signOut = () => {
     localStorage.removeItem('token');
     setLoggedIn(false);
     setEmail('');
     history.push('/sign-in');
-  }
+  };
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <div className="page__content">
-          <Header email={email} loggedIn={loggedIn} signOut={signOut} />
+          <Header 
+            email={email} 
+            loggedIn={loggedIn} 
+            signOut={signOut} 
+          />
           <Switch>
             <ProtectedRoute exact path="/" loggedIn={loggedIn}>
               <Main
@@ -174,11 +183,17 @@ function App() {
             </ProtectedRoute>
 
             <Route path="/sign-up">
-              <Register handleRegister={handleRegister} updateDataInfoTooltip={updateDataInfoTooltip} />
+              <Register 
+                handleRegister={handleRegister} 
+                updateDataInfoTooltip={updateDataInfoTooltip} 
+              />
             </Route>
 
             <Route path="/sign-in">
-              <Login handleLogin={handleLogin} updateDataInfoTooltip={updateDataInfoTooltip} />
+              <Login 
+                handleLogin={handleLogin} 
+                updateDataInfoTooltip={updateDataInfoTooltip} 
+              />
             </Route>
 
             <Route>
@@ -217,16 +232,8 @@ function App() {
           img={dataInfoTooltip.img}
           onClose={() => updateDataInfoTooltip(null)}
         />}
-
-        {/* {<PopupWithForm //попап подтверждения удаления 
-          name="confirm"
-          title="Вы уверены?"
-          buttonText="Да"
-        />} */}
-
       </div>
     </CurrentUserContext.Provider>
-
   );
 };
 

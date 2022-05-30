@@ -11,3 +11,6 @@
   color: #FFFFFF;
 }
 
+.authorization__link:hover {
+  opacity: .6;
+}

@@ -5,7 +5,7 @@ function Login(props) {
   const [formParams, setFormParams] = useState({
     email: '',
     password: ''
-  })
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -13,7 +13,7 @@ function Login(props) {
       ...prev,
       [name]: value
     }));
-  }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -27,13 +27,12 @@ function Login(props) {
           img: fail
         })
       })
-  }
+  };
 
   return (
     <div className="authorization page__container">
       <h2 className="authorization__title">Вход</h2>
       <form className="authorization__form" method="post" name="login__form" onSubmit={handleSubmit}>
-
         <div className="authorization__field">
           <input
             id="email-input"
@@ -65,10 +64,8 @@ function Login(props) {
           />
           <span className="password-input-error authorization__error"></span>
         </div>
-
         <button className="authorization__submit" type="submit">Войти</button>
       </form>
-
     </div>
   );
 };

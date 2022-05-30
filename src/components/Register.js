@@ -6,7 +6,7 @@ function Register(props) {
   const [formParams, setFormParams] = useState({
     email: '',
     password: ''
-  })
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -14,7 +14,7 @@ function Register(props) {
       ...prev,
       [name]: value
     }));
-  }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,13 +26,12 @@ function Register(props) {
           img: fail
         })
       })
-  }
+  };
 
   return (
     <div className="authorization page__container">
       <h2 className="authorization__title">Регистрация</h2>
       <form className="authorization__form" method="post" name="register__form" onSubmit={handleSubmit}>
-
         <div className="authorization__field">
           <input
             id="email-input"
@@ -65,9 +64,7 @@ function Register(props) {
           <span className="password-input-error authorization__error"></span>
         </div>
         <button className="authorization__submit" type="submit">Зарегистрироваться</button>
-
       </form>
-
       <Link className="authorization__link" to="/sign-in">Уже зарегистрированы? Войти</Link>
     </div>
   );

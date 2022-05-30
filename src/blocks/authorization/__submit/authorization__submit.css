@@ -12,4 +12,9 @@
   line-height: 22px;
   text-align: center;
   color: #000000;
+  cursor: pointer;
+}
+
+.authorization__submit:hover {
+  opacity: .6;
 }
