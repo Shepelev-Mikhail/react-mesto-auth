@@ -15,6 +15,7 @@ import ProtectedRoute from './ProtectedRoute';
 import * as MestoAuth from '../utils/MestoAuth.js';
 import InfoTooltip from './InfoTooltip';
 import success from '../images/Success.svg';
+import fail from '../images/Fail.svg';
 
 function App() {
   const [cards, updateCards] = useState([]);
@@ -29,15 +30,15 @@ function App() {
   const history = useHistory();
 
   useEffect(() => {
-    return () => {
+    if (loggedIn) {
       Promise.all([api.getProfile(), api.getInitialCards()])
         .then(([res, cardList]) => {
           updateCurrentUser(res);
           updateCards(cardList);
         })
         .catch(console.log);
-    };
-  }, []);
+    }
+  }, [loggedIn]);
 
   useEffect(() => {
     tokenCheck();
@@ -118,10 +119,18 @@ function App() {
     return MestoAuth.register(email, password).then(() => {
       updateDataInfoTooltip({
         title: 'Вы успешно зарегистрировались!',
-        img: success
+        img: success,
+        alt: 'Успешно'
       })
       history.push('/sign-in')
     })
+      .catch(() => {
+        updateDataInfoTooltip({
+          title: 'Что-то пошло не так!<br/> Попробуйте ещё раз.',
+          img: fail,
+          alt: 'Ошибка'
+        })
+      })
   };
 
   //авторизация
@@ -134,6 +143,13 @@ function App() {
           history.push('/');
           setEmail(email);
         }
+      })
+      .catch(() => {
+        updateDataInfoTooltip({
+          title: 'Что-то пошло не так!<br/> Попробуйте ещё раз.',
+          img: fail,
+          alt: 'Ошибка'
+        })
       })
   };
 
@@ -148,7 +164,7 @@ function App() {
           setEmail(res.data.email);
         }
       })
-      .catch(console.log);
+        .catch(console.log);
     }
   };
 
@@ -164,10 +180,10 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <div className="page__content">
-          <Header 
-            email={email} 
-            loggedIn={loggedIn} 
-            signOut={signOut} 
+          <Header
+            email={email}
+            loggedIn={loggedIn}
+            signOut={signOut}
           />
           <Switch>
             <ProtectedRoute exact path="/" loggedIn={loggedIn}>
@@ -183,16 +199,16 @@ function App() {
             </ProtectedRoute>
 
             <Route path="/sign-up">
-              <Register 
-                handleRegister={handleRegister} 
-                updateDataInfoTooltip={updateDataInfoTooltip} 
+              <Register
+                handleRegister={handleRegister}
+                updateDataInfoTooltip={updateDataInfoTooltip}
               />
             </Route>
 
             <Route path="/sign-in">
-              <Login 
-                handleLogin={handleLogin} 
-                updateDataInfoTooltip={updateDataInfoTooltip} 
+              <Login
+                handleLogin={handleLogin}
+                updateDataInfoTooltip={updateDataInfoTooltip}
               />
             </Route>
 
@@ -230,6 +246,7 @@ function App() {
         {dataInfoTooltip && <InfoTooltip
           title={dataInfoTooltip.title}
           img={dataInfoTooltip.img}
+          alt={dataInfoTooltip.alt}
           onClose={() => updateDataInfoTooltip(null)}
         />}
       </div>

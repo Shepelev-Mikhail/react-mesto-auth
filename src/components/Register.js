@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import fail from '../images/Fail.svg';
 
 function Register(props) {
   const [formParams, setFormParams] = useState({
@@ -20,12 +19,6 @@ function Register(props) {
     e.preventDefault();
     let { email, password } = formParams;
     props.handleRegister({ email, password })
-      .catch(() => {
-        props.updateDataInfoTooltip({
-          title: 'Что-то пошло не так!<br/> Попробуйте ещё раз.',
-          img: fail
-        })
-      })
   };
 
   return (

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import fail from '../images/Fail.svg';
 
 function Login(props) {
   const [formParams, setFormParams] = useState({
@@ -21,12 +20,6 @@ function Login(props) {
       return;
     }
     props.handleLogin({ email: formParams.email, password: formParams.password })
-      .catch(() => {
-        props.updateDataInfoTooltip({
-          title: 'Что-то пошло не так!<br/> Попробуйте ещё раз.',
-          img: fail
-        })
-      })
   };
 
   return (
