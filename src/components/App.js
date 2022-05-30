@@ -116,14 +116,15 @@ function App() {
 
   //регистрация
   const handleRegister = ({ email, password }) => {
-    return MestoAuth.register(email, password).then(() => {
-      updateDataInfoTooltip({
-        title: 'Вы успешно зарегистрировались!',
-        img: success,
-        alt: 'Успешно'
+    return MestoAuth.register(email, password)
+      .then(() => {
+        updateDataInfoTooltip({
+          title: 'Вы успешно зарегистрировались!',
+          img: success,
+          alt: 'Успешно'
+        })
+        history.push('/sign-in')
       })
-      history.push('/sign-in')
-    })
       .catch(() => {
         updateDataInfoTooltip({
           title: 'Что-то пошло не так!<br/> Попробуйте ещё раз.',
