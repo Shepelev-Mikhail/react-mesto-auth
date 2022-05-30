@@ -3,13 +3,12 @@ import { api } from '../utils/Api';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
-import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
-import { Switch, Route, Link, Redirect, useLocation, useHistory } from 'react-router-dom';
+import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 import Login from './Login';
 import Register from './Register';
 import ProtectedRoute from './ProtectedRoute';
@@ -26,6 +25,7 @@ function App() {
   const [selectedCard, updateSelectedCard] = useState(null);
   const [dataInfoTooltip, updateDataInfoTooltip] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [email, setEmail] = useState('');
   const history = useHistory();
 
   useEffect(() => {
@@ -37,6 +37,10 @@ function App() {
         })
         .catch(console.log);
     };
+  }, []);
+
+  useEffect(() => {
+    tokenCheck();
   }, []);
 
   //клик на аватар
@@ -109,11 +113,8 @@ function App() {
       .catch(console.log);
   };
 
-  //const location = useLocation();
-
-  const handleRegister = ({email, password}) => {
+  const handleRegister = ({ email, password }) => {
     return MestoAuth.register(email, password).then(() => {
-      // history.push('/sign-in');
       updateDataInfoTooltip({
         title: 'Вы успешно зарегистрировались!',
         img: success
@@ -122,13 +123,43 @@ function App() {
     })
   }
 
-  
+  const handleLogin = ({ email, password }) => {
+    return MestoAuth.authorize(email, password)
+      .then((data) => {
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+          setLoggedIn(true);
+          history.push('/');
+          setEmail(email);
+        }
+      })
+  }
+
+  const tokenCheck = () => {
+    if (localStorage.getItem('token')) {
+      let token = localStorage.getItem('token');
+      MestoAuth.getContent(token).then((res) => {
+        if (res) {
+          setLoggedIn(true);
+          history.push('/');
+          setEmail(res.data.email);
+        }
+      });
+    }
+  }
+
+  const signOut = () => {
+    localStorage.removeItem('token');
+    setLoggedIn(false);
+    setEmail('');
+    history.push('/sign-in');
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <div className="page__content">
-          <Header />
+          <Header email={email} loggedIn={loggedIn} signOut={signOut} />
           <Switch>
             <ProtectedRoute exact path="/" loggedIn={loggedIn}>
               <Main
@@ -147,7 +178,7 @@ function App() {
             </Route>
 
             <Route path="/sign-in">
-              <Login />
+              <Login handleLogin={handleLogin} updateDataInfoTooltip={updateDataInfoTooltip} />
             </Route>
 
             <Route>
@@ -181,7 +212,7 @@ function App() {
           onClose={() => updateSelectedCard(null)}
         />}
 
-        {dataInfoTooltip && <InfoTooltip 
+        {dataInfoTooltip && <InfoTooltip
           title={dataInfoTooltip.title}
           img={dataInfoTooltip.img}
           onClose={() => updateDataInfoTooltip(null)}

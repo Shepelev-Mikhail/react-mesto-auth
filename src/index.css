@@ -48,3 +48,13 @@
 @import url(./blocks/popup/__error/popup__error.css);
 @import url(./blocks/popup/__error/_visible/popup__error_visible.css);
 @import url(./blocks/popup/__input/_type_error/popup__input_type_error.css);
+@import url(./blocks/authorization/authorization.css);
+@import url(./blocks/authorization/__title/authorization__title.css);
+@import url(./blocks/authorization/__form/authorization__form.css);
+@import url(./blocks/authorization/__field/authorization__field.css);
+@import url(./blocks/authorization/__submit/authorization__submit.css);
+@import url(./blocks/authorization/__input/authorization__input.css);
+@import url(./blocks/authorization/__link/authorization__link.css);
+@import url(./blocks/popup/__image/_infoTooltip/popup__image_infoTooltip.css);
+@import url(./blocks/popup/__caption/_infoTooltip/popup__caption_infoTooltip.css);
+@import url(./blocks/popup/__container/_infoTooltip/popup__container_infoTooltip.css);

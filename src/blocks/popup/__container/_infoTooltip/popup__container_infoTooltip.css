@@ -1,9 +1,8 @@
-.header__nav {
-  margin-top: 6px;
+.popup__container_infoTooltip {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
 }

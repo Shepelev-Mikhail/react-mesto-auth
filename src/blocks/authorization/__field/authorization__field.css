@@ -1,0 +1,7 @@
+.authorization__field {
+  margin-bottom: 30px;
+}
+
+.authorization__field:last-of-type {
+  margin-bottom: 0;
+}
